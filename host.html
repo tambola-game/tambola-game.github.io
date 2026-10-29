@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tambola Host Console</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/host.css">
+</head>
+<body>
+  <header class="host-header">
+    <div class="host-header-inner">
+      <h1>🎙️ Tambola Host Console</h1>
+      <span class="muted-light">Call numbers, show the board, check claims.</span>
+      <nav class="host-nav">
+        <button type="button" id="presenterBtn" class="btn btn-small" aria-pressed="false" title="Hide the host tools so you can share this window on Teams (shortcut: P)">Presenter view</button>
+        <a href="index-pdf.html" class="btn btn-small">Tickets (PDF/PNG)</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="host-layout">
+    <section class="card-panel caller-panel" aria-labelledby="h-caller">
+      <h2 id="h-caller" class="sr-only">Number caller</h2>
+      <div class="caller">
+        <div class="current-label">Current number</div>
+        <div id="curNum" class="current-num" aria-live="polite">—</div>
+        <div id="curNick" class="current-nick">Press “Call next number” (or Space) to start</div>
+        <div id="lastChips" class="last-chips" aria-label="Last called numbers"></div>
+      </div>
+
+      <div class="caller-controls">
+        <button type="button" id="nextBtn" class="btn btn-primary btn-big">Call next number <kbd>Space</kbd></button>
+        <button type="button" id="undoBtn" class="btn" title="Take back the last number (it goes back into the pool)">↶ Undo last</button>
+        <button type="button" id="autoBtn" class="btn" aria-pressed="false">▶ Auto-call</button>
+        <label class="inline">every <input type="number" id="autoSecs" min="5" max="60" step="1" value="15" aria-label="Seconds between auto-called numbers"> s</label>
+        <label class="inline"><input type="checkbox" id="speakChk"> Read aloud</label>
+      </div>
+      <div class="counter-row">
+        <span id="counter" class="counter"></span>
+        <button type="button" id="copyBtn" class="btn btn-small">Copy called numbers</button>
+        <button type="button" id="resetBtn" class="btn btn-small btn-danger">New game</button>
+      </div>
+
+      <div class="legend" aria-label="Board colours">
+        <span class="lg lg-last"></span> Current
+        <span class="lg lg-recent"></span> Last 5
+        <span class="lg lg-old"></span> Earlier
+        <span class="lg lg-none"></span> Not called
+      </div>
+      <div id="board" class="board" role="grid" aria-label="Number board 1 to 90"></div>
+    </section>
+
+    <aside class="host-tools" id="hostTools">
+      <section class="card-panel" aria-labelledby="h-claim">
+        <div class="claim-head">
+          <h2 id="h-claim">Check a claim</h2>
+          <div class="seg" role="group" aria-label="How to check">
+            <button type="button" id="modeNums" class="seg-btn" aria-pressed="true">By numbers</button>
+            <button type="button" id="modeId" class="seg-btn" aria-pressed="false">By ticket ID</button>
+          </div>
+        </div>
+
+        <div id="numsMode">
+          <form id="numForm" novalidate>
+            <div class="row">
+              <label for="claimPattern">Pattern</label>
+              <select id="claimPattern"></select>
+              <label for="claimNums">Numbers</label>
+              <input type="text" id="claimNums" class="grow" placeholder="e.g. 4 20 34 44 50" autocomplete="off">
+              <button type="submit" class="btn btn-primary btn-small">Verify</button>
+            </div>
+            <div id="numHint" class="muted"></div>
+          </form>
+          <div id="numResult" hidden>
+            <div id="verdict" class="verdict" role="status"></div>
+            <div id="numChips" class="num-chips"></div>
+            <div id="numMatch" class="muted"></div>
+            <div id="recordRow" class="row" hidden>
+              <input type="text" id="winnerName" class="grow" placeholder="Winner's name" maxlength="80" aria-label="Winner's name">
+              <button type="button" id="recordBtn" class="btn btn-small">Record winner</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="idMode" hidden>
+          <form id="claimForm" class="row" novalidate>
+            <label for="claimId">Ticket ID</label>
+            <input type="text" id="claimId" placeholder="#0042" autocomplete="off" inputmode="numeric" maxlength="8">
+            <button type="submit" class="btn btn-primary btn-small">Check</button>
+          </form>
+          <div id="claimMsg" class="muted" role="status"></div>
+          <div id="claimResult" hidden>
+            <div id="claimWho" class="claim-who"></div>
+            <table id="claimGrid" class="claim-grid" aria-label="Claimed ticket"></table>
+            <ul id="claimPatterns" class="claim-patterns"></ul>
+          </div>
+        </div>
+
+        <details class="registry-box">
+          <summary id="regSummary">Ticket registry</summary>
+          <p class="muted">Optional. With the tickets loaded, a numbers check also tells you whose ticket it is, and the ticket-ID check works. It reads the tickets saved by the ticket pages in this browser; in another browser, load the registry file (“Export registry (JSON)” on the ticket page).</p>
+          <input type="file" id="regFile" accept=".json,application/json">
+        </details>
+      </section>
+
+      <section class="card-panel" aria-labelledby="h-prizes">
+        <h2 id="h-prizes">Prizes</h2>
+        <ul id="prizeList" class="prize-list"></ul>
+      </section>
+    </aside>
+  </main>
+
+  <dialog id="dlg">
+    <form method="dialog">
+      <h3 id="dlgTitle"></h3>
+      <p id="dlgMessage"></p>
+      <div id="dlgButtons" class="dlg-buttons"></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/rng.js"></script>
+  <script src="js/ticket.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/host-logic.js"></script>
+  <script src="js/host-app.js"></script>
+</body>
+</html>

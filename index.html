@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tambola Ticket Generator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="Tambola ticket logo">
+        <rect width="64" height="64" rx="14" fill="#f97316"/>
+        <rect x="9" y="19" width="46" height="26" rx="3" fill="#fff"/>
+        <g stroke="#f97316" stroke-width="1.6">
+          <path d="M9 27.7h46M9 36.3h46"/>
+          <path d="M14.1 19v26M19.2 19v26M24.3 19v26M29.4 19v26M34.6 19v26M39.7 19v26M44.8 19v26M49.9 19v26"/>
+        </g>
+        <g fill="#1c1917">
+          <circle cx="11.6" cy="23.3" r="1.7"/><circle cx="26.9" cy="23.3" r="1.7"/><circle cx="42.2" cy="23.3" r="1.7"/>
+          <circle cx="16.7" cy="32" r="1.7"/><circle cx="32" cy="32" r="1.7"/><circle cx="52.4" cy="32" r="1.7"/>
+          <circle cx="21.8" cy="40.6" r="1.7"/><circle cx="37.1" cy="40.6" r="1.7"/><circle cx="47.3" cy="40.6" r="1.7"/>
+        </g>
+      </svg>
+      <div class="header-text">
+        <h1>Tambola Ticket Generator</h1>
+        <p>Upload the registration sheet, preview personalised tickets, and download them as PNG files.</p>
+        <ul class="pills">
+          <li>Works offline</li>
+          <li>Data never leaves your browser</li>
+          <li>Unique, rule-compliant tickets</li>
+          <li><a href="#rules" id="rulesLink">View Tambola rules</a></li>
+        </ul>
+      </div>
+      <div class="header-art" aria-hidden="true">
+        <span>4</span><span></span><span>20</span><span>34</span><span>44</span><span>50</span><span></span><span></span><span></span>
+        <span>5</span><span>16</span><span></span><span></span><span></span><span>53</span><span>64</span><span>75</span><span></span>
+        <span>8</span><span></span><span>24</span><span></span><span></span><span>58</span><span></span><span>79</span><span>88</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="storageWarning" class="notice notice-warn" hidden></div>
+
+    <div id="restoreBanner" class="notice notice-info" hidden>
+      <span id="restoreText"></span>
+      <span class="notice-actions">
+        <button type="button" id="restoreContinue" class="btn btn-primary">Continue</button>
+        <button type="button" id="restoreFresh" class="btn">Start fresh</button>
+      </span>
+    </div>
+
+    <section class="card-panel" aria-labelledby="h-upload">
+      <h2 id="h-upload">1. Upload registrations</h2>
+      <label id="dropzone" class="dropzone" for="fileInput">
+        <input type="file" id="fileInput" accept=".xlsx,.xlsm,.xls,.csv">
+        <strong>Drop an Excel / CSV file here</strong>
+        <span>or click to choose a file</span>
+        <span id="fileInfo" class="muted"></span>
+      </label>
+      <div id="sheetPickerRow" class="row" hidden>
+        <label for="sheetPicker">Sheet</label>
+        <select id="sheetPicker"></select>
+      </div>
+      <div id="errorBox" class="notice notice-error" role="alert" hidden></div>
+    </section>
+
+    <section class="card-panel" aria-labelledby="h-settings">
+      <h2 id="h-settings">2. Settings</h2>
+      <div class="grid-form">
+        <label for="heading">Ticket heading</label>
+        <input type="text" id="heading" value="Give 2026" maxlength="60">
+
+        <label for="footerText">Ticket footer</label>
+        <input type="text" id="footerText" value="Good luck!" maxlength="60" placeholder="Leave empty for no footer text">
+
+        <label for="pngLayout">Download layout</label>
+        <div class="checks">
+          <select id="pngLayout">
+            <option value="landscape" selected>Ticket on an A4 landscape sheet (recommended — prints whole)</option>
+            <option value="portrait">Ticket on an A4 portrait page</option>
+            <option value="ticket">Ticket only (tightest crop, best for chat apps; may be cropped when printed)</option>
+          </select>
+          <span class="muted">The landscape sheet has the shape of A4 landscape (and almost exactly a 5 × 7 in photo), so photo-print dialogs set to "Fill page" don't cut the ticket off. Tickets on screen are unchanged.</span>
+        </div>
+
+        <span class="label-like">Ticket extras</span>
+        <div class="checks">
+          <label><input type="checkbox" id="showSerial" checked> Show serial number (#0042)</label>
+          <label><input type="checkbox" id="showLabel" checked> Show "Ticket 2 of 4"</label>
+          <label><input type="checkbox" id="titleCase"> Normalize name case (Title Case)</label>
+        </div>
+
+        <span class="label-like">Randomness</span>
+        <div class="checks">
+          <label><input type="checkbox" id="useSeed"> Reproducible tickets (use a seed)</label>
+          <div id="seedRow" class="row" hidden>
+            <label for="seed">Seed</label>
+            <input type="text" id="seed" placeholder="Leave empty to create one" maxlength="200">
+          </div>
+          <span class="muted">Off = fresh random tickets every time. With a seed, the same file + seed + empty registry gives the same tickets.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card-panel" aria-labelledby="h-summary">
+      <h2 id="h-summary">3. Review &amp; generate</h2>
+      <div id="summaryEmpty" class="muted">Upload a file to see the summary.</div>
+      <div id="summary" hidden>
+        <div class="stats">
+          <div class="stat"><b id="statRows">0</b><span>rows read</span></div>
+          <div class="stat"><b id="statPeople">0</b><span>people</span></div>
+          <div class="stat"><b id="statTickets">0</b><span>tickets to issue</span></div>
+          <div class="stat"><b id="statSkipped">0</b><span>rows skipped</span></div>
+        </div>
+        <details id="warningsBox" class="warnings" hidden>
+          <summary id="warningsSummary"></summary>
+          <ul id="warnings"></ul>
+        </details>
+      </div>
+      <div class="row">
+        <button type="button" id="generateBtn" class="btn btn-primary" disabled>Generate tickets</button>
+        <progress id="progress" max="100" value="0" hidden></progress>
+        <span id="progressText" class="muted"></span>
+      </div>
+    </section>
+
+    <section class="card-panel" aria-labelledby="h-walkin">
+      <h2 id="h-walkin">Walk-in tickets</h2>
+      <form id="walkinForm" class="row" novalidate>
+        <label for="walkinName">Name</label>
+        <input type="text" id="walkinName" maxlength="100" autocomplete="off" required>
+        <label for="walkinCount">Tickets</label>
+        <input type="number" id="walkinCount" min="1" max="20" step="1" value="1">
+        <button type="submit" class="btn btn-primary" id="walkinBtn">Issue walk-in ticket(s)</button>
+      </form>
+      <div id="walkinMsg" class="muted" role="status"></div>
+    </section>
+
+    <details id="rules" class="card-panel rules">
+      <summary>Tambola rules used on every ticket <span class="muted">— open to verify</span></summary>
+      <div class="rules-body">
+        <div class="rules-grid">
+          <ol class="rules-list">
+            <li>A ticket is a grid of <b>3 rows × 9 columns</b> (27 cells).</li>
+            <li>It holds exactly <b>15 numbers</b>; the other 12 cells are blank.</li>
+            <li>Every <b>row has exactly 5 numbers</b> and 4 blanks.</li>
+            <li>Each column has its own number range (see the example ticket): column 1 = 1–9, column 2 = 10–19 … column 8 = 70–79, column 9 = 80–90.</li>
+            <li>Every <b>column has at least 1 and at most 3 numbers</b>, so no column is empty.</li>
+            <li>Inside a column, numbers <b>increase from top to bottom</b>.</li>
+            <li>No number repeats on a ticket; all numbers are whole numbers from 1 to 90.</li>
+          </ol>
+          <div class="rules-example">
+            <table class="mini-ticket" aria-label="Example ticket with column ranges">
+              <thead>
+                <tr><th>1–9</th><th>10–19</th><th>20–29</th><th>30–39</th><th>40–49</th><th>50–59</th><th>60–69</th><th>70–79</th><th>80–90</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>4</td><td></td><td>20</td><td>34</td><td>44</td><td>50</td><td></td><td></td><td></td></tr>
+                <tr><td>5</td><td>16</td><td></td><td></td><td></td><td>53</td><td>64</td><td>75</td><td></td></tr>
+                <tr><td>8</td><td></td><td>24</td><td></td><td></td><td>58</td><td></td><td>79</td><td>88</td></tr>
+              </tbody>
+            </table>
+            <p class="muted">Example: 5 numbers in each row, 15 in total, every column used (3, 1, 2, 1, 1, 3, 1, 2, 1 numbers) and ascending within each column.</p>
+          </div>
+        </div>
+        <h3>Extra guarantees from this app</h3>
+        <ul class="rules-list">
+          <li>No two tickets ever have the <b>same 15 numbers</b>, across Excel, walk-in and earlier sessions.</li>
+          <li>No two tickets share an <b>identical row</b> (same 5 numbers), so two players cannot complete the same line on the same call.</li>
+          <li>Every ticket is checked against the rules above before it is shown or saved; an invalid ticket is never issued.</li>
+          <li>Numbers come from the browser's secure random generator (or a seeded generator if you switch on the seed option).</li>
+        </ul>
+        <h3>Verify it yourself</h3>
+        <p id="selfCheck" class="selfcheck" role="status"></p>
+        <p class="muted">"Download CSV" lists the numbers of every ticket row by row, so any ticket can be checked against the rules above.</p>
+      </div>
+    </details>
+
+    <section id="gallerySection" class="card-panel" aria-labelledby="h-gallery">
+      <h2 id="h-gallery">Tickets <span id="galleryStats" class="muted"></span></h2>
+      <div class="toolbar">
+        <button type="button" id="downloadAllBtn" class="btn btn-primary">Download all (ZIP)</button>
+        <button type="button" id="downloadCsvBtn" class="btn">Download CSV</button>
+        <button type="button" id="exportRegBtn" class="btn">Export registry (JSON)</button>
+        <button type="button" id="importRegBtn" class="btn">Import registry…</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+        <button type="button" id="resetBtn" class="btn btn-danger">Reset</button>
+        <input type="search" id="filter" placeholder="Filter by name…" aria-label="Filter tickets by name">
+      </div>
+      <div id="zipProgressRow" class="row" hidden>
+        <progress id="zipProgress" max="100" value="0"></progress>
+        <span id="zipProgressText" class="muted"></span>
+      </div>
+      <div id="galleryEmpty" class="muted">No tickets yet. Generate tickets from a file or issue a walk-in ticket.</div>
+      <div id="gallery" class="gallery"></div>
+    </section>
+  </main>
+
+  <dialog id="dlg">
+    <form method="dialog" id="dlgForm">
+      <h3 id="dlgTitle"></h3>
+      <p id="dlgMessage"></p>
+      <div id="dlgButtons" class="dlg-buttons"></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="lib/xlsx.full.min.js"></script>
+  <script src="lib/jszip.min.js"></script>
+  <script src="js/rng.js"></script>
+  <script src="js/png.js"></script>
+  <script src="js/ticket.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/planner.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

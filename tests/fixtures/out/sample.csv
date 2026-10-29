@@ -1,0 +1,21 @@
+﻿Id,Start time,Completion time,Email,Name,Full Name,Microsoft Alias / Email,Location / Site,Team / Org,Cause(s) / NGO(s) you donated to,Donated to other cause(s)? List them here — you can add more than one (one per line),"How many tickets are you registering for? (1 ticket = ₹250 donated. e.g. ₹250 = 1, ₹500 = 2, ₹750 = 3)",Preferred contact for game-day link,I confirm my donation was made voluntarily on the GIVE portal
+1,10/8/2026,10/8/2026,participant1@example.com,Asha Rao,Asha Rao,participant1@example.com,Noida,Team,,Supporting Education for Children for a Better Future,,Teams,Yes
+2,10/8/2026,10/8/2026,participant2@example.com,Divya Kulkarni,Divya,participant2@example.com,Noida,Team,,,,Teams,Yes
+3,10/8/2026,10/8/2026,participant3@example.com,Isha Menon,Isha Menon,participant3@example.com,Noida,Team,,CRY- Child Rights and You,,Teams,Yes
+4,10/8/2026,10/8/2026,participant4@example.com,Nisha V P,Nisha V P,participant4@example.com,Noida,Team,,,,Teams,Yes
+5,10/8/2026,10/8/2026,participant5@example.com,Kabir Malhotra,Kabir Malhotra,participant5@example.com,Noida,Team,,,,Teams,Yes
+6,10/8/2026,10/8/2026,participant6@example.com,Meera Raghavan Iyer,Meera Raghavan Iyer,participant6@example.com,Noida,Team,,,,Teams,Yes
+7,10/8/2026,10/8/2026,participant7@example.com,Ananya Shah,Ananya shah,participant7@example.com,Noida,Team,,,,Teams,Yes
+8,10/8/2026,10/8/2026,participant8@example.com,Rohan Desai,Rohan Desai,participant8@example.com,Noida,Team,,,,Teams,Yes
+9,10/8/2026,10/8/2026,participant9@example.com,Lakshmi Pillai,Lakshmi Pillai,participant9@example.com,Noida,Team,,,,Teams,Yes
+10,10/8/2026,10/8/2026,participant10@example.com,Tara Bhatt,Tara M Bhatt,participant10@example.com,Noida,Team,,,,Teams,Yes
+11,10/8/2026,10/8/2026,participant11@example.com,Arjun Nair,Arjun Govind Nair,participant11@example.com,Noida,Team,,"Save the Children, Bal Raksha Bharat Rs. 2000 (8 tickets)",,Teams,Yes
+12,10/8/2026,10/8/2026,participant12@example.com,Aman Chauhan,Aman Chauhan,participant12@example.com,Noida,Team,,,,Teams,Yes
+13,10/8/2026,10/8/2026,participant13@example.com,Sneha Reddy,Sneha Reddy,participant13@example.com,Noida,Team,,,,Teams,Yes
+14,10/8/2026,10/8/2026,participant14@example.com,VIKRAM SETH,Vikram Seth,participant14@example.com,Noida,Team,,,,Teams,Yes
+15,10/8/2026,10/8/2026,participant14@example.com,VIKRAM SETH,Vikram Seth,participant14@example.com,Noida,Team,,,2,Teams,Yes
+16,10/8/2026,10/8/2026,participant15@example.com,Rohit Bansal,Rohit Bansal,participant15@example.com,Noida,Team,,,4,Teams,Yes
+17,10/8/2026,10/8/2026,participant16@example.com,Karan Joshi,Karan Joshi,participant16@example.com,Noida,Team,,,2,Teams,Yes
+18,10/8/2026,10/8/2026,participant17@example.com,Yash Kapoor,Yash Kapoor,participant17@example.com,Noida,Team,,,1,Teams,No
+19,10/8/2026,10/8/2026,participant7@example.com,Ananya Shah,Ananya shah,participant7@example.com,Noida,Team,,,1,Teams,Yes
+20,10/8/2026,10/8/2026,participant18@example.com,Ritu Sharma,Ritu Sharma,participant18@example.com,Noida,Team,,,2,Teams,Yes

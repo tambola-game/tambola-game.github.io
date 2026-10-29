@@ -1,0 +1,9 @@
+{
+  "name": "tambola-ticket-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Client-side Tambola ticket generator driven by an Excel sheet",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\""
+  }
+}
